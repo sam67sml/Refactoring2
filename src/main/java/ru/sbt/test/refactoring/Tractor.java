@@ -1,11 +1,13 @@
 package ru.sbt.test.refactoring;
 
+import static ru.sbt.test.refactoring.Field.FIELD_BORDER_X;
+import static ru.sbt.test.refactoring.Field.FIELD_BORDER_Y;
+
 public class Tractor {
 
-	private static final int FIELD_X = 5;
-	private static final int FIELD_Y = 5;
-	private int positionX = 0;
-	private int positionY = 0;
+
+	private Field field = new Field(0,0);
+
 	private Orientation orientation = Orientation.NORTH;
 
 	public void move(String command) {
@@ -17,51 +19,25 @@ public class Tractor {
 	}
 
     public void moveForwards() {
-		switch (orientation) {
-			case NORTH:
-				positionY++;
-				break;
-			case EAST:
-				positionX++;
-				break;
-			case SOUTH:
-				positionY--;
-				break;
-			case WEST:
-				positionX--;
-				break;
-		}
-		if (positionX > FIELD_X || positionY > FIELD_Y) {
+        field = orientation.move(field);
+		if (field.getPosition_X() > FIELD_BORDER_X || field.getPosition_Y() > FIELD_BORDER_Y) {
 			throw new TractorInDitchException();
 		}
 	}
 
     public void turnClockwise() {
-		switch (orientation) {
-			case NORTH:
-				orientation = Orientation.EAST;
-				break;
-			case EAST:
-				orientation = Orientation.SOUTH;
-				break;
-			case SOUTH:
-				orientation = Orientation.WEST;
-				break;
-			case WEST:
-				orientation = Orientation.NORTH;
-				break;
-		}
+        orientation = orientation.turn();
 	}
 
-	public int getPositionX() {
-		return positionX;
+	int getPositionX() {
+		return field.getPosition_X();
 	}
 
-	public int getPositionY() {
-		return positionY;
+	int getPositionY() {
+		return field.getPosition_Y();
 	}
 
-	public Orientation getOrientation() {
+	Orientation getOrientation() {
 		return orientation;
 	}
 
